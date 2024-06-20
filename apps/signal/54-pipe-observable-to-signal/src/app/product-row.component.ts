@@ -4,6 +4,7 @@ import {
   effect,
   inject,
   input,
+  untracked,
 } from '@angular/core';
 import { CurrencyPipe } from './currency.pipe';
 import { CurrencyService } from './currency.service';
@@ -27,13 +28,10 @@ export class ProductRowComponent {
   currencyService = inject(CurrencyService);
 
   constructor() {
-    effect(
-      () => {
+    effect(() => {
+      untracked(() => {
         this.currencyService.updateCode(this.product().currencyCode);
-      },
-      // This won't cause a loop, because the value used to set the state
-      // doesn't come from the service.
-      { allowSignalWrites: true },
-    );
+      });
+    });
   }
 }
